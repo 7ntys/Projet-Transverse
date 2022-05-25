@@ -16,6 +16,7 @@ class Game:
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
         map_layer.zoom = 2
+        face = "right"
         player_position = tmx_data.get_object_by_name("spawn")
         self.player = Player(player_position.x, player_position.y)
         self.player.location = player_position.x, player_position.y
@@ -44,34 +45,42 @@ class Game:
         self.group.add(self.player)
 
     # récupère les entrées de l'utilisateur
-    def input(self):
+    def input(self,face):
+        face = "right"
         pressed = pygame.key.get_pressed()
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    return True
+                    return True,face
         if pressed[pygame.K_q] or pressed[pygame.K_LEFT]:
             self.player.move_left()
             self.player.change_animation('left')
+            face = "left"
         if pressed[pygame.K_d] or pressed[pygame.K_RIGHT]:
             self.player.move_right()
             self.player.change_animation('right')
+            face = "right"
+        return False,face    
 
-    def update(self):
+    def update(self,face):
+        #Return 0 = Aucune collision
+        #Return 1 = Touche un sol
+        #Return 2 = Touche un mur
         self.group.update()
         for sprite in self.group.sprites():
             if sprite.rect.collidelist(self.collide) != -1:
                 sprite.move_back(self.collide_pos_y[sprite.rect.collidelist(self.collide)],
                                  self.collide_height[sprite.rect.collidelist(self.collide)])
-                #print("haut")
-                return True
+                return 1
             elif sprite.rect.collidelist(self.collide_bas) != -1:
                 sprite.move_back_bas()
-                #print("bas")
-                return True
+                self.player.move_back_right(face)
+                
+                print("bas")
+                return 2
             else:
-                return False
+                return 0
 
     def run(self):
         clock = pygame.time.Clock()
@@ -80,40 +89,47 @@ class Game:
         jumping = False
         can_jump = True
         g = 1.5
+        face = "right"
         while running:
+            clock.tick(60)
             self.player.save_location()
-            collide = self.update()
-            space_pressed = self.input()
-            if space_pressed:
-                print("                   space_pressed :           ",space_pressed)
-            print("can jump      :",can_jump)
-            if collide:
-                print("COLLIDE")
+            collide = self.update(face)
+            space_pressed,face = self.input(face)
+            #if space_pressed:
+                #print("                   space_pressed :           ",space_pressed)
+            #print("can jump      :",can_jump)
+            if collide == 1:
+                #print("COLLIDE")
                 can_jump = True
                 jumping = False
                 t = 0
-                g = 1.5
+                g = 2
             if space_pressed and can_jump:
-                print("Bonjour")
                 self.player.jump(t)
                 jumping = True
                 can_jump = False
-            elif not jumping and (not collide):
-                g = 1.5
-                g *= 1.15
+            elif not jumping and collide != 1:
+                if g < 5:
+                    g *= 1.5
+                if g >= 5 and g <= 10: 
+                    g *= 1.05      
                 self.player.gravity(g)
                 can_jump = False
             if jumping:
+                g = 2
                 t += 1
                 self.player.jump(t)
             self.group.center(self.player.rect.center)
             self.group.draw(self.screen)
             pygame.display.flip()
-            pressed = pygame.key.get_pressed()
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                if pressed[pygame.K_ESCAPE]:
-                    running = False
-            clock.tick(60)
+            check_input_exit()
+           
         pygame.quit()
+
+def check_input_exit():
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            exit()
+        if event.type == pygame.KEYDOWN: 
+            if event.key == pygame.K_ESCAPE:
+                exit()        

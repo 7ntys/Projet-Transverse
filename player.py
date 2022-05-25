@@ -52,7 +52,11 @@ class Player(pygame.sprite.Sprite):
         self.position[1] = self.old_position[1] + 1
         self.rect.topleft = self.position
 
-
+    def move_back_right(self,face):
+        if face == "left":
+            self.position[0] += self.speed
+        elif face == "right":
+            self.position[0] -= self.speed    
     def gravity(self, g):
         self.position[1] += g
 
