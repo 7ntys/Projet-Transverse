@@ -64,11 +64,11 @@ class Game:
             if sprite.rect.collidelist(self.collide) != -1:
                 sprite.move_back(self.collide_pos_y[sprite.rect.collidelist(self.collide)],
                                  self.collide_height[sprite.rect.collidelist(self.collide)])
-                print("haut")
+                #print("haut")
                 return True
             elif sprite.rect.collidelist(self.collide_bas) != -1:
                 sprite.move_back_bas()
-                print("bas")
+                #print("bas")
                 return True
             else:
                 return False
@@ -79,19 +79,27 @@ class Game:
         t = 0
         jumping = False
         can_jump = True
-        g = 0
+        g = 1.5
         while running:
             self.player.save_location()
             collide = self.update()
             space_pressed = self.input()
-            if space_pressed and can_jump:
-                jumping = True
+            if space_pressed:
+                print("                   space_pressed :           ",space_pressed)
+            print("can jump      :",can_jump)
             if collide:
+                print("COLLIDE")
                 can_jump = True
                 jumping = False
                 t = 0
                 g = 1.5
-            elif not jumping:
+            if space_pressed and can_jump:
+                print("Bonjour")
+                self.player.jump(t)
+                jumping = True
+                can_jump = False
+            elif not jumping and (not collide):
+                g = 1.5
                 g *= 1.15
                 self.player.gravity(g)
                 can_jump = False
