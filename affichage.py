@@ -8,14 +8,14 @@ class Game:
 
     def __init__(self):
         # crée la fenètre pygame
-        self.screen = pygame.display.set_mode((0, 0), pygame.RESIZABLE)
+        self.screen = pygame.display.set_mode((1920, 1080), pygame.FULLSCREEN)
         pygame.display.set_caption("Jeu")
 
         # génère la map
-        tmx_data = pytmx.util_pygame.load_pygame('map_test.tmx')
+        tmx_data = pytmx.util_pygame.load_pygame('map_3.tmx')
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
-        map_layer.zoom = 2
+        map_layer.zoom = 0.44
         face = "right"
         player_position = tmx_data.get_object_by_name("spawn")
         self.player = Player(player_position.x, player_position.y)
@@ -55,11 +55,10 @@ class Game:
                     return True,face
         if pressed[pygame.K_q] or pressed[pygame.K_LEFT]:
             self.player.move_left()
-            self.player.change_animation('left')
+            #self.player.change_animation('left')
             face = "left"
         if pressed[pygame.K_d] or pressed[pygame.K_RIGHT]:
             self.player.move_right()
-            self.player.change_animation('right')
             face = "right"
         return False,face    
 
@@ -69,15 +68,19 @@ class Game:
         #Return 2 = Touche un mur
         self.group.update()
         for sprite in self.group.sprites():
+            if sprite.rect.collidelist(self.collide) != -1 and sprite.rect.collidelist(self.collide_bas) != -1:
+                sprite.move_back(self.collide_pos_y[sprite.rect.collidelist(self.collide)],
+                self.collide_height[sprite.rect.collidelist(self.collide)])
+                self.player.move_back_right(face)
+                return 1
             if sprite.rect.collidelist(self.collide) != -1:
                 sprite.move_back(self.collide_pos_y[sprite.rect.collidelist(self.collide)],
-                                 self.collide_height[sprite.rect.collidelist(self.collide)])
+                                 self.collide_height[sprite.rect.collidelist(self.collide)])               
                 return 1
-            elif sprite.rect.collidelist(self.collide_bas) != -1:
-                sprite.move_back_bas()
+            if sprite.rect.collidelist(self.collide_bas) != -1:
+                #sprite.move_back_bas()
                 self.player.move_back_right(face)
                 
-                print("bas")
                 return 2
             else:
                 return 0
@@ -121,6 +124,16 @@ class Game:
                 self.player.jump(t)
             self.group.center(self.player.rect.center)
             self.group.draw(self.screen)
+            a_x = (self.player.position[0]/10240)*1920
+            a_y = ((self.player.position[1]/7680)*1080)-400
+            #print("calcul x :",a_x)
+            #print("calcul y :",a_y)
+            self.screen.blit(self.player.sprite, (a_x,a_y))
+
+            #show_hitbox(self.screen,self.collide_bas)
+            #a = pygame.image.load('red_square.jpg').convert()
+            #a = pygame.transform.scale(a,(200,354))
+            #self.screen.blit(a,(0,0))
             pygame.display.flip()
             check_input_exit()
            
@@ -133,3 +146,13 @@ def check_input_exit():
         if event.type == pygame.KEYDOWN: 
             if event.key == pygame.K_ESCAPE:
                 exit()        
+
+def show_hitbox(win,list_hitbox):
+    b = pygame.image.load('red_square.jpg').convert()
+    for a in list_hitbox:
+        a.x = (a.x/10240)*1920
+        a.y = ((a.y/7680)*1080)-400
+        print(a.x)
+        win.blit(b, (a.x,a.y))
+        pygame.draw.rect(win, (255,0,0), pygame.Rect(a.x,a.y, a.width,a.height),2)
+
