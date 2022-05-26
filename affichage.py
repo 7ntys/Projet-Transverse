@@ -8,6 +8,7 @@ class Game:
 
     def __init__(self):
         # crée la fenètre pygame
+        #self.screen = pygame.display.set_mode((1920, 1080), pygame.FULLSCREEN)
         self.screen = pygame.display.set_mode((1920, 1080), pygame.FULLSCREEN)
         pygame.display.set_caption("Jeu")
 
@@ -142,9 +143,9 @@ class Game:
             print(face)
             a_x = (self.player.position[0]/20480)*1920 #redimension du personnage au niveau de l'écran (1920x1080)
             a_y = ((self.player.position[1]/10240)*1080-400)
-            #print("calcul x :",a_x)
-            #print("calcul y :",a_y)
-            #print("position x et y ",self.player.position[0],"et", self.player.position[1])
+            print("calcul x :",a_x)
+            print("calcul y :",a_y)
+            print("position x et y ",self.player.position[0],"et", self.player.position[1])
             if self.player.run == False: #Variable Action du personnage si == False le personnage ne bouge pas
                 self.player.idle()
             self.player.good_face(face)  #Orienter le personnage dans le bon sens  

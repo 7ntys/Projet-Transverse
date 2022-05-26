@@ -11,8 +11,7 @@ class Player(pygame.sprite.Sprite):
         self.scale = [165,292]
         self.sprite = pygame.transform.scale(self.sprite,(self.scale[0],self.scale[1]))
         self.position = [x, y]
-        self.image = self.get_image()
-        #self.image.set_colorkey([0, 0, 0])
+        self.image = self.get_image()        #self.image.set_colorkey([0, 0, 0])
         #self.rect = self.image.get_rect()
         self.rect = pygame.Rect((self.position[0]/20480)*1920,((self.position[1]/10240)*1080)-400,self.scale[0],self.scale[1])
 
