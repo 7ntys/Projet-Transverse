@@ -34,11 +34,6 @@ class Player(pygame.sprite.Sprite):
         pos = self.position
         return pos
 
-    #def change_animation(self, name):
-        #self.image = self.images[name]
-        #self.image.set_colorkey([0, 0, 0])
-
-     
     def move_right(self):
         self.position[0] += self.speed
         self.sprite =  self.change_sprite()
@@ -75,7 +70,7 @@ class Player(pygame.sprite.Sprite):
         image: Surface = pygame.Surface(([self.scale[0],self.scale[1]]))
         return image
             
-    def idle(self):
+    def idle(self): #changer le sprite en "Idle"
         self.sprite = pygame.image.load('tileset/BlueWizard/BlueWizard_Idle/Chara - BlueIdle' + str(self.sprite_number) + ".png").convert_alpha()  
         self.sprite = pygame.transform.scale(self.sprite,(self.scale[0],self.scale[1]))
         self.sprite_loop += 1
@@ -85,10 +80,9 @@ class Player(pygame.sprite.Sprite):
         if self.sprite_number >= 20:
             self.sprite_number = 1
         return self.sprite   
-    def change_sprite(self):
+    def change_sprite(self): #changer le sprite en "Marche"
         self.sprite = pygame.image.load('tileset/BlueWizard/BlueWizard_Walk/Chara_BlueWalk' + str(self.sprite_number) + ".png").convert_alpha()
         self.sprite = pygame.transform.scale(self.sprite,(self.scale[0],self.scale[1]))
-        #self.image.set_colorkey([0, 0, 0])
         self.sprite_loop += 1
 
         if self.sprite_loop >= 10:
@@ -98,7 +92,7 @@ class Player(pygame.sprite.Sprite):
             self.sprite_number = 1
         return self.sprite  
 
-    def jump_sprite(self,t):
+    def jump_sprite(self,t): #changer le sprite en "Saut"
         self.sprite = pygame.image.load('tileset/BlueWizard/BlueWizard_Jump/CharaWizardJump_' + str(self.sprite_number) + ".png").convert_alpha()
         self.sprite = pygame.transform.scale(self.sprite,(self.scale[0],self.scale[1]))
         #self.image.set_colorkey([0, 0, 0])
@@ -118,10 +112,10 @@ class Player(pygame.sprite.Sprite):
         return self.sprite  
 
 
-    def update_rect(self):
-        self.rect.move((self.position[0]/20480)*1920,((self.position[1]/10240)*1080))
-        return ((self.position[0]/20480)*1920),(((self.position[1]/10240)*1080))
+    def update_rect(self): #update du rectangle avec redimension
+        self.rect.move((self.position[0]/20480)*1920,((self.position[1]/10240)*1080)-400)
+        return ((self.position[0]/20480)*1920),(((self.position[1]/10240)*1080-400))
 
-    def good_face(self,face):
+    def good_face(self,face): #Orienter le sprite en fonction de la direction ou il regarde
         if face == "left":
             self.sprite = pygame.transform.flip(self.sprite, True, False)

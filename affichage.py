@@ -84,14 +84,13 @@ class Game:
                                  self.collide_height[sprite.rect.collidelist(self.collide)])                             
                 return 1
             if self.player.rect.collidelist(self.collide_bas) != -1:
-                #sprite.move_back_bas()
                 self.player.move_back_right(face)
                 
                 return 2
             else:
                 return 0
 
-    def check_input_exit(self):
+    def check_input_exit(self):  #fonction pour quitter le programme quand on appuie sur echap
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
@@ -107,7 +106,7 @@ class Game:
         jumping = False
         can_jump = True
         g = 1.5
-        face = "right"
+        face = "right" #direction dans lequel le perso regarde
         while running:
             clock.tick(60)
             self.player.save_location()
@@ -140,39 +139,22 @@ class Game:
                 self.player.run = True
             self.group.center(self.player.rect.center)
             self.group.draw(self.screen)
-            a_x = (self.player.position[0]/20480)*1920
-            a_y = ((self.player.position[1]/10240)*1080)
+            a_x = (self.player.position[0]/20480)*1920 #redimension du personnage au niveau de l'écran (1920x1080)
+            a_y = ((self.player.position[1]/10240)*1080-400)
             #print("calcul x :",a_x)
             #print("calcul y :",a_y)
             #print("position x et y ",self.player.position[0],"et", self.player.position[1])
-            print(self.player.run)
-            if self.player.run == False:
+            if self.player.run == False: #Variable Action du personnage si == False le personnage ne bouge pas
                 self.player.idle()
-            self.player.good_face(face)    
-            self.screen.blit(self.player.sprite, (a_x,a_y))
+            self.player.good_face(face)  #Orienter le personnage dans le bon sens  
+            self.screen.blit(self.player.sprite, (a_x,a_y)) #Afficher le personnage au coordonnées a_x et a_y redimensionné
             pygame.draw.rect(self.screen, (255,0,0), self.player.rect,2)
-            #show_hitbox(self.screen,self.collide_bas)
-            b = pygame.image.load('red_square.jpg').convert()
-            b = pygame.transform.scale(b,(165,292))
-            #self.screen.blit(b, (x,y))
-            #pygame.draw.rect(self.screen, (255,0,0), pygame.Rect(x,y,165,292),2)
-            #a = pygame.image.load('red_square.jpg').convert()
-            #a = pygame.transform.scale(a,(200,354))
-            #self.screen.blit(a,(0,0))
+
             pygame.display.flip()
             self.check_input_exit()
            
         pygame.quit()
   
-
-    def show_hitbox(win,list_hitbox):
-        b = pygame.image.load('red_square.jpg').convert()
-        for a in list_hitbox:
-            a.x = (a.x/20480)*1920
-            a.y = ((a.y/10240)*1080)-400
-            print(a.x)
-            win.blit(b, (a.x,a.y))
-            pygame.draw.rect(win, (255,0,0), pygame.Rect(a.x,a.y, a.width,a.height),2)
 
     def display_text(self, text, positionX, positionY, size,R,G,B):    #Fonction texte
         font = pygame.font.SysFont("arial", size)                     #Police et taille
