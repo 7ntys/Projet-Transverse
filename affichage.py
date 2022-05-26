@@ -12,7 +12,7 @@ class Game:
         pygame.display.set_caption("Jeu")
 
         # génère la map
-        tmx_data = pytmx.util_pygame.load_pygame('map_3.tmx')
+        tmx_data = pytmx.util_pygame.load_pygame('final_map.tmx')
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
         map_layer.zoom = 0.44
@@ -51,14 +51,21 @@ class Game:
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    self.player.sprite_number = 1
                     return True,face
+ 
         if pressed[pygame.K_q] or pressed[pygame.K_LEFT]:
             self.player.move_left()
-            #self.player.change_animation('left')
+            self.player.run = True
             face = "left"
+        elif not(pressed[pygame.K_d] or pressed[pygame.K_RIGHT]):
+            self.player.run = False        
         if pressed[pygame.K_d] or pressed[pygame.K_RIGHT]:
             self.player.move_right()
+            self.player.run = True
             face = "right"
+        elif not(pressed[pygame.K_q] or pressed[pygame.K_LEFT]):
+            self.player.run = False
         return False,face    
 
     def update(self,face):
@@ -107,19 +114,17 @@ class Game:
             x,y = self.player.update_rect()
             collide = self.update(face)
             space_pressed,face = self.input(face)
-            #if space_pressed:
-                #print("                   space_pressed :           ",space_pressed)
-            #print("can jump      :",can_jump)
             if collide == 1:
-                #print("COLLIDE")
                 can_jump = True
                 jumping = False
                 t = 0
                 g = 2
             if space_pressed and can_jump:
                 self.player.jump(t)
+                self.player.jump_sprite(t)
                 jumping = True
                 can_jump = False
+                self.player.run = True
             elif not jumping and collide != 1:
                 if g < 5:
                     g *= 1.5
@@ -127,17 +132,23 @@ class Game:
                     g *= 1.05      
                 self.player.gravity(g)
                 can_jump = False
+                self.player.run = False
             if jumping:
                 g = 2
                 t += 1
                 self.player.jump(t)
+                self.player.run = True
             self.group.center(self.player.rect.center)
             self.group.draw(self.screen)
-            a_x = (self.player.position[0]/10240)*1920
-            a_y = ((self.player.position[1]/7680)*1080)-400
+            a_x = (self.player.position[0]/20480)*1920
+            a_y = ((self.player.position[1]/10240)*1080)
             #print("calcul x :",a_x)
             #print("calcul y :",a_y)
             #print("position x et y ",self.player.position[0],"et", self.player.position[1])
+            print(self.player.run)
+            if self.player.run == False:
+                self.player.idle()
+            self.player.good_face(face)    
             self.screen.blit(self.player.sprite, (a_x,a_y))
             pygame.draw.rect(self.screen, (255,0,0), self.player.rect,2)
             #show_hitbox(self.screen,self.collide_bas)
@@ -157,8 +168,8 @@ class Game:
     def show_hitbox(win,list_hitbox):
         b = pygame.image.load('red_square.jpg').convert()
         for a in list_hitbox:
-            a.x = (a.x/10240)*1920
-            a.y = ((a.y/7680)*1080)-400
+            a.x = (a.x/20480)*1920
+            a.y = ((a.y/10240)*1080)-400
             print(a.x)
             win.blit(b, (a.x,a.y))
             pygame.draw.rect(win, (255,0,0), pygame.Rect(a.x,a.y, a.width,a.height),2)
@@ -194,7 +205,6 @@ class Game:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = event.pos                                                                  #position de la souris = la position ou t'as cliqué 
                 if button_play.collidepoint(mouse_pos): 
-                    print ("1")
                     b = 1
                     break
                 if button_settings.collidepoint(mouse_pos):            

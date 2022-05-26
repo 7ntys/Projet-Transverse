@@ -14,9 +14,9 @@ class Player(pygame.sprite.Sprite):
         self.image = self.get_image()
         #self.image.set_colorkey([0, 0, 0])
         #self.rect = self.image.get_rect()
-        self.rect = pygame.Rect((self.position[0]/10240)*1920,((self.position[1]/7680)*1080)-400,self.scale[0],self.scale[1])
+        self.rect = pygame.Rect((self.position[0]/20480)*1920,((self.position[1]/10240)*1080)-400,self.scale[0],self.scale[1])
 
-
+        self.run = False
         self.speed = 10
         self.g = 0.002
         self.sprite_number = 1
@@ -38,12 +38,15 @@ class Player(pygame.sprite.Sprite):
         #self.image = self.images[name]
         #self.image.set_colorkey([0, 0, 0])
 
+     
     def move_right(self):
         self.position[0] += self.speed
         self.sprite =  self.change_sprite()
+        self.run = True
     def move_left(self):
         self.position[0] -= self.speed
         self.sprite = self.change_sprite()
+        self.run = True
 
     def jump(self, t):
         self.position[1] -= (self.speed+4)-1/2*self.g*t**2
@@ -68,12 +71,20 @@ class Player(pygame.sprite.Sprite):
             self.position[0] -= self.speed    
     def gravity(self, g):
         self.position[1] += g
-        print("gravité")
     def get_image(self):
         image: Surface = pygame.Surface(([self.scale[0],self.scale[1]]))
         return image
             
-
+    def idle(self):
+        self.sprite = pygame.image.load('tileset/BlueWizard/BlueWizard_Idle/Chara - BlueIdle' + str(self.sprite_number) + ".png").convert_alpha()  
+        self.sprite = pygame.transform.scale(self.sprite,(self.scale[0],self.scale[1]))
+        self.sprite_loop += 1
+        if self.sprite_loop >= 8:
+            self.sprite_number += 1
+            self.sprite_loop = 0
+        if self.sprite_number >= 20:
+            self.sprite_number = 1
+        return self.sprite   
     def change_sprite(self):
         self.sprite = pygame.image.load('tileset/BlueWizard/BlueWizard_Walk/Chara_BlueWalk' + str(self.sprite_number) + ".png").convert_alpha()
         self.sprite = pygame.transform.scale(self.sprite,(self.scale[0],self.scale[1]))
@@ -87,6 +98,30 @@ class Player(pygame.sprite.Sprite):
             self.sprite_number = 1
         return self.sprite  
 
+    def jump_sprite(self,t):
+        self.sprite = pygame.image.load('tileset/BlueWizard/BlueWizard_Jump/CharaWizardJump_' + str(self.sprite_number) + ".png").convert_alpha()
+        self.sprite = pygame.transform.scale(self.sprite,(self.scale[0],self.scale[1]))
+        #self.image.set_colorkey([0, 0, 0])
+        self.sprite_loop += 1
+            
+        if self.sprite_loop >= 20:
+            self.sprite_number += 1
+            self.sprite_loop = 0
+        if self.sprite_number >= 8:
+            self.sprite_number = 1
+        if self.speed+4 >= -1/2*self.g*t**2: 
+            if self.sprite_number >= 5:
+                self.sprite_number = 5
+        else: 
+            if self.sprite_number <= 5:
+                self.sprite_number = 5
+        return self.sprite  
+
+
     def update_rect(self):
-        self.rect.move((self.position[0]/10240)*1920,((self.position[1]/7680)*1080)-400)
-        return ((self.position[0]/10240)*1920),(((self.position[1]/7680)*1080)-400)
+        self.rect.move((self.position[0]/20480)*1920,((self.position[1]/10240)*1080))
+        return ((self.position[0]/20480)*1920),(((self.position[1]/10240)*1080))
+
+    def good_face(self,face):
+        if face == "left":
+            self.sprite = pygame.transform.flip(self.sprite, True, False)
