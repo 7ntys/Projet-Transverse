@@ -13,11 +13,12 @@ class Player(pygame.sprite.Sprite):
         self.position = [x, y]
         self.image = self.get_image()
         #self.image.set_colorkey([0, 0, 0])
-        self.rect = self.image.get_rect()
+        #self.rect = self.image.get_rect()
+        self.rect = pygame.Rect((self.position[0]/10240)*1920,((self.position[1]/7680)*1080)-400,self.scale[0],self.scale[1])
 
 
         self.speed = 10
-        self.g = 0.003
+        self.g = 0.002
         self.sprite_number = 1
         self.sprite_loop = 10
         #self.images = {
@@ -67,9 +68,9 @@ class Player(pygame.sprite.Sprite):
             self.position[0] -= self.speed    
     def gravity(self, g):
         self.position[1] += g
-
+        print("gravité")
     def get_image(self):
-        image: Surface = pygame.Surface([self.scale[0],self.scale[1]])
+        image: Surface = pygame.Surface(([self.scale[0],self.scale[1]]))
         return image
             
 
@@ -86,3 +87,6 @@ class Player(pygame.sprite.Sprite):
             self.sprite_number = 1
         return self.sprite  
 
+    def update_rect(self):
+        self.rect.move((self.position[0]/10240)*1920,((self.position[1]/7680)*1080)-400)
+        return ((self.position[0]/10240)*1920),(((self.position[1]/7680)*1080)-400)
