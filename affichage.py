@@ -12,7 +12,7 @@ class Game:
         pygame.display.set_caption("Jeu")
 
         # génère la map
-        tmx_data = pytmx.util_pygame.load_pygame('final_map.tmx')
+        tmx_data = pytmx.util_pygame.load_pygame('tileset/final_map_assets/final_map2.tmx')
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
         map_layer.zoom = 0.44
@@ -27,7 +27,7 @@ class Game:
         self.collide_bas_height = []
         for obj in tmx_data.objects:
             if obj.type == "collision_bas":
-                self.collide_bas.append(pygame.Rect(obj.x+400, obj.y, obj.width, obj.height))
+                self.collide_bas.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
                 self.collide_bas_pos_y.append(obj.y)
                 self.collide_bas_height.append(obj.height)
 
@@ -127,7 +127,7 @@ class Game:
             elif not jumping and collide != 1:
                 if g < 5:
                     g *= 1.5
-                if g >= 5 and g <= 10: 
+                if g >= 5 and g <= 60: 
                     g *= 1.05      
                 self.player.gravity(g)
                 can_jump = False
@@ -139,6 +139,7 @@ class Game:
                 self.player.run = True
             self.group.center(self.player.rect.center)
             self.group.draw(self.screen)
+            print(face)
             a_x = (self.player.position[0]/20480)*1920 #redimension du personnage au niveau de l'écran (1920x1080)
             a_y = ((self.player.position[1]/10240)*1080-400)
             #print("calcul x :",a_x)

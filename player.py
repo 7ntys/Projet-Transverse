@@ -78,7 +78,7 @@ class Player(pygame.sprite.Sprite):
             self.sprite_number += 1
             self.sprite_loop = 0
         if self.sprite_number >= 20:
-            self.sprite_number = 1
+            self.sprite_number = 1     
         return self.sprite   
     def change_sprite(self): #changer le sprite en "Marche"
         self.sprite = pygame.image.load('tileset/BlueWizard/BlueWizard_Walk/Chara_BlueWalk' + str(self.sprite_number) + ".png").convert_alpha()
@@ -89,7 +89,7 @@ class Player(pygame.sprite.Sprite):
             self.sprite_number += 1
             self.sprite_loop = 0
         if self.sprite_number >= 20:
-            self.sprite_number = 1
+            self.sprite_number = 1        
         return self.sprite  
 
     def jump_sprite(self,t): #changer le sprite en "Saut"
@@ -108,7 +108,7 @@ class Player(pygame.sprite.Sprite):
                 self.sprite_number = 5
         else: 
             if self.sprite_number <= 5:
-                self.sprite_number = 5
+                self.sprite_number = 5             
         return self.sprite  
 
 
