@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.5" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="512" tileheight="512" infinite="0" nextlayerid="11" nextobjectid="57">
+<map version="1.8" tiledversion="1.8.5" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="512" tileheight="512" infinite="0" nextlayerid="11" nextobjectid="63">
  <tileset firstgid="1" source="tileset/Mossy_-_TileSet.tsx"/>
  <layer id="1" name="Calque de Tuiles 1" width="20" height="15">
   <data encoding="csv">
@@ -46,6 +46,7 @@
   <object id="26" type="collision_bas" x="5692" y="5258" width="408" height="2012"/>
   <object id="27" type="collision_bas" x="6124" y="5754" width="424" height="1500"/>
   <object id="28" type="collision_bas" x="8268" y="5242" width="1960" height="2012"/>
+  <object id="57" type="collision_bas" x="4648.18" y="6745.42" width="458.182" height="369.757"/>
  </objectgroup>
  <objectgroup id="5" name="collision_bas"/>
 </map>

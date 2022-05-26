@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         super().__init__()
-        self.sprite = pygame.image.load('tileset/BlueWizard/BlueWizard_Idle/Chara - BlueIdle1.png').convert_alpha()
+        self.sprite = pygame.image.load('tileset/BlueWizard/BlueWizard_Walk/Chara_BlueWalk1.png').convert_alpha()
         self.scale = [165,292]
         self.sprite = pygame.transform.scale(self.sprite,(self.scale[0],self.scale[1]))
         self.position = [x, y]
@@ -75,7 +75,7 @@ class Player(pygame.sprite.Sprite):
             
 
     def change_sprite(self):
-        self.sprite = pygame.image.load('tileset/BlueWizard/BlueWizard_Idle/Chara - BlueIdle' + str(self.sprite_number) + ".png").convert_alpha()
+        self.sprite = pygame.image.load('tileset/BlueWizard/BlueWizard_Walk/Chara_BlueWalk' + str(self.sprite_number) + ".png").convert_alpha()
         self.sprite = pygame.transform.scale(self.sprite,(self.scale[0],self.scale[1]))
         #self.image.set_colorkey([0, 0, 0])
         self.sprite_loop += 1
