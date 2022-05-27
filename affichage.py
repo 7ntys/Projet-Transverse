@@ -16,9 +16,9 @@ class Game:
         tmx_data = pytmx.util_pygame.load_pygame('tileset/final_map_assets/final_map2.tmx')
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
-        map_layer.zoom = 0.44
-        face = "right"
-        player_position = tmx_data.get_object_by_name("spawn")
+        map_layer.zoom = 0.44 
+        face = "right" #direction dans laquelle le personnage regarde
+        player_position = tmx_data.get_object_by_name("spawn") #emplacement de l'endroit ou le personnage apparait
         self.player = Player(player_position.x, player_position.y)
         self.player.location = player_position.x, player_position.y
 
@@ -44,8 +44,7 @@ class Game:
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=1)
         self.group.add(self.player)
 
-    # récupère les entrées de l'utilisateur
-    def input(self,face):
+    def input(self,face):  # récupère les entrées de l'utilisateur
         face = "right"
         pressed = pygame.key.get_pressed()
         events = pygame.event.get()
@@ -69,7 +68,7 @@ class Game:
             self.player.run = False
         return False,face    
 
-    def update(self,face):
+    def update(self,face): #regarder les collisions entre le joueur et les élements du décor
         #Return 0 = Aucune collision
         #Return 1 = Touche un sol
         #Return 2 = Touche un mur
@@ -99,7 +98,7 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     exit()  
 
-    def run(self):
+    def run(self): #Fonction principal
         self.menu(0)
         clock = pygame.time.Clock()
         running = True
@@ -108,7 +107,7 @@ class Game:
         can_jump = True
         g = 1.5
         face = "right" #direction dans lequel le perso regarde
-        while running:
+        while running:  #Boucle de jeu
             clock.tick(60)
             self.player.save_location()
             x,y = self.player.update_rect()
@@ -140,7 +139,6 @@ class Game:
                 self.player.run = True
             self.group.center(self.player.rect.center)
             self.group.draw(self.screen)
-            print(face)
             a_x = (self.player.position[0]/20480)*1920 #redimension du personnage au niveau de l'écran (1920x1080)
             a_y = ((self.player.position[1]/10240)*1080-400)
             print("calcul x :",a_x)
@@ -164,7 +162,7 @@ class Game:
         text = font.render(text, True, (R, G, B), None)               #Couleur
         self.screen.blit(text, (positionX, positionY))                        #Position du texte
 
-    def menu(self,b):               #779 640 (bas gauche)  487 (haut gauche) 1036,487 (haut droite) 1036,640
+    def menu(self,b):               #Menu de démarrage
         clock = pygame.time.Clock()
         self.parallax_load()
 
@@ -196,7 +194,7 @@ class Game:
                 if button_leave.collidepoint(mouse_pos):
                     exit()
         
-    def menu_return(self,b,mouse_pos):
+    def menu_return(self,b,mouse_pos):  #Menu de démarrage 2
         clock = pygame.time.Clock()
         actual_screen = pygame.image.load("tileset/Interface/Screen2.png").convert_alpha()  
         actual_screen = pygame.transform.scale(actual_screen, (1920, 1080))  
@@ -221,7 +219,7 @@ class Game:
                     self.menu()
                     button_play = pygame.draw.rect(win, (0, 200, 200), (780,  487, 257, 153))        
 
-    def parallax_load(self):
+    def parallax_load(self):  #Chargement d'image
         self.tree = pygame.image.load("tileset/Interface/menu/layers/tree.png").convert_alpha()
         self.tree =  pygame.transform.scale(self.tree, (1088, 320)) 
         self.treex = 0
@@ -237,7 +235,7 @@ class Game:
         self.sky = pygame.image.load("tileset/Interface/menu/layers/sky.png").convert_alpha()        
         self.sky =  pygame.transform.scale(self.sky, (1920, 1080)) 
 
-    def parallax(self):
+    def parallax(self): #Parallax du menu (ou les différentes images bouge mais pas à la même vitesse)
         self.screen.blit(self.sky, (0,0))
         #---------------------------------------------------------
         self.screen.blit(self.mountainfar, (self.mountainfarx+1000,200))
@@ -264,7 +262,7 @@ class Game:
         self.screen.blit(self.tree, (self.treex-300,760))
         self.screen.blit(self.tree, (self.treex-600,760))
         #---------------------------------------------------------
-        self.treex += 0.2
+        self.treex += 0.2 #Incrémenter toutes les images pour qu'elles se déplacent
         self.treefarx += 0.1
         self.mountainx += 0.05
         self.mountainfarx += 0.025
