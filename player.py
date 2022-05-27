@@ -11,13 +11,14 @@ class Player(pygame.sprite.Sprite):
         self.scale = [165,292]
         self.sprite = pygame.transform.scale(self.sprite,(self.scale[0],self.scale[1]))
         self.position = [x, y]
-        self.image = self.get_image()        #self.image.set_colorkey([0, 0, 0])
-        #self.rect = self.image.get_rect()
-        self.rect = pygame.Rect((self.position[0]/20480)*1920,((self.position[1]/10240)*1080)-400,self.scale[0],self.scale[1])
+        self.image = self.get_image()
+        #self.image.set_colorkey([0, 0, 0])
+        self.rect = self.image.get_rect()
+        #self.rect = pygame.Rect((self.position[0]/20480)*1920,((self.position[1]/10240)*1080)-400,self.scale[0],self.scale[1])
 
         self.run = False
         self.speed = 10
-        self.g = 0.002
+        self.g = 100
         self.sprite_number = 1
         self.sprite_loop = 10
         #self.images = {
@@ -43,7 +44,7 @@ class Player(pygame.sprite.Sprite):
         self.run = True
 
     def jump(self, t):
-        self.position[1] -= (self.speed+4)-1/2*self.g*t**2
+        self.position[1] -= ((self.speed+4)*t)-1/2*self.g*t**2
 
     def update(self):
         self.rect.topleft = self.position
@@ -77,7 +78,7 @@ class Player(pygame.sprite.Sprite):
             self.sprite_number += 1
             self.sprite_loop = 0
         if self.sprite_number >= 20:
-            self.sprite_number = 1     
+            self.sprite_number = 1
         return self.sprite   
     def change_sprite(self): #changer le sprite en "Marche"
         self.sprite = pygame.image.load('tileset/BlueWizard/BlueWizard_Walk/Chara_BlueWalk' + str(self.sprite_number) + ".png").convert_alpha()
@@ -88,7 +89,7 @@ class Player(pygame.sprite.Sprite):
             self.sprite_number += 1
             self.sprite_loop = 0
         if self.sprite_number >= 20:
-            self.sprite_number = 1        
+            self.sprite_number = 1
         return self.sprite  
 
     def jump_sprite(self,t): #changer le sprite en "Saut"
@@ -107,7 +108,7 @@ class Player(pygame.sprite.Sprite):
                 self.sprite_number = 5
         else: 
             if self.sprite_number <= 5:
-                self.sprite_number = 5             
+                self.sprite_number = 5
         return self.sprite  
 
 
